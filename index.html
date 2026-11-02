@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mama's Savings Group</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== TOP NAVIGATION ===== -->
+  <header class="navbar">
+    <div class="navbar-brand">
+      <span class="brand-icon">🏦</span>
+      <span class="brand-name">Mama's Savings Group</span>
+    </div>
+    <nav class="nav-tabs">
+      <button class="nav-btn active" onclick="showTab('dashboard')">Dashboard</button>
+      <button class="nav-btn" onclick="showTab('members')">Members</button>
+      <button class="nav-btn" onclick="showTab('record')">Record Entry</button>
+      <button class="nav-btn" onclick="showTab('history')">History</button>
+    </nav>
+  </header>
+
+  <main class="main-content">
+
+    <!-- DASHBOARD TAB -->
+    <section id="tab-dashboard" class="tab-panel active">
+      <h2 class="page-title">Group Overview</h2>
+      <div class="summary-grid">
+        <div class="card summary-card">
+          <div class="card-label">Total Members</div>
+          <div class="card-value" id="stat-members">0</div>
+        </div>
+        <div class="card summary-card green">
+          <div class="card-label">Total Contributions</div>
+          <div class="card-value" id="stat-contributions">KES 0</div>
+        </div>
+        <div class="card summary-card red">
+          <div class="card-label">Total Debts</div>
+          <div class="card-value" id="stat-debts">KES 0</div>
+        </div>
+        <div class="card summary-card blue">
+          <div class="card-label">Net Group Balance</div>
+          <div class="card-value" id="stat-balance">KES 0</div>
+        </div>
+      </div>
+      <div class="card table-card">
+        <h3 class="card-title">Member Balances</h3>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Name</th><th>Contributions</th><th>Debt</th><th>Net</th><th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="dashboard-tbody">
+              <tr><td colspan="5" class="empty-row">No members added yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- MEMBERS TAB -->
+    <section id="tab-members" class="tab-panel">
+      <h2 class="page-title">Manage Members</h2>
+      <div class="card form-card">
+        <h3 class="card-title">Add New Member</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="memberName">Full Name *</label>
+            <input type="text" id="memberName" placeholder="e.g. Grace Wanjiku" />
+          </div>
+          <div class="form-group">
+            <label for="memberPhone">Phone Number</label>
+            <input type="tel" id="memberPhone" placeholder="e.g. 0712 345 678" />
+          </div>
+          <div class="form-group">
+            <label for="memberContrib">Opening Contribution (KES)</label>
+            <input type="number" id="memberContrib" placeholder="0" min="0" />
+          </div>
+          <div class="form-group">
+            <label for="memberDebt">Opening Debt (KES)</label>
+            <input type="number" id="memberDebt" placeholder="0" min="0" />
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="addMember()">+ Add Member</button>
+        <p id="member-msg" class="form-msg"></p>
+      </div>
+      <div class="card table-card">
+        <h3 class="card-title">All Members</h3>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Name</th><th>Phone</th><th>Contributions</th><th>Debt</th><th>Status</th><th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="members-tbody">
+              <tr><td colspan="6" class="empty-row">No members yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- RECORD ENTRY TAB -->
+    <section id="tab-record" class="tab-panel">
+      <h2 class="page-title">Record an Entry</h2>
+      <div class="card form-card">
+        <h3 class="card-title">New Transaction</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="txMember">Select Member *</label>
+            <select id="txMember">
+              <option value="">-- Choose member --</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="txType">Entry Type *</label>
+            <select id="txType">
+              <option value="contribution">Contribution (money paid in)</option>
+              <option value="debt">Debt (money owed)</option>
+              <option value="debt_paid">Debt Repayment</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="txAmount">Amount (KES) *</label>
+            <input type="number" id="txAmount" placeholder="e.g. 500" min="1" />
+          </div>
+          <div class="form-group">
+            <label for="txNote">Note (optional)</label>
+            <input type="text" id="txNote" placeholder="e.g. June contribution" />
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="recordEntry()">✔ Save Entry</button>
+        <p id="record-msg" class="form-msg"></p>
+      </div>
+      <div class="card info-card">
+        <h3 class="card-title">What do these mean?</h3>
+        <ul class="info-list">
+          <li><strong>Contribution</strong> — Member paid money into the group.</li>
+          <li><strong>Debt</strong> — Member owes money to the group.</li>
+          <li><strong>Debt Repayment</strong> — Member paid back what they owed.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- HISTORY TAB -->
+    <section id="tab-history" class="tab-panel">
+      <h2 class="page-title">Transaction History</h2>
+      <div class="card table-card">
+        <h3 class="card-title">All Transactions</h3>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Date</th><th>Member</th><th>Type</th><th>Amount</th><th>Note</th>
+              </tr>
+            </thead>
+            <tbody id="history-tbody">
+              <tr><td colspan="5" class="empty-row">No transactions yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>Mama's Savings Group Tracker — Data saved on this device</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
